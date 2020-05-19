@@ -7,6 +7,7 @@ namespace Hook.OWL
         #region Properties
         
         public TeamData SelectedTeam { get; private set; }
+        public PlayerProfileData SelectedPlayer { get; private set; }
         
         #endregion
         
@@ -15,6 +16,11 @@ namespace Hook.OWL
         public TeamGridElementEventArgs(TeamData selectedTeam)
         {
             SelectedTeam = selectedTeam;
+        }
+
+        public TeamGridElementEventArgs(PlayerProfileData selectedPlayer)
+        {
+            SelectedPlayer = selectedPlayer;
         }
         
         #endregion

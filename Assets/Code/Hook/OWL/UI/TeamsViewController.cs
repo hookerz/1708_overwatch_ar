@@ -18,6 +18,7 @@ public class TeamsViewController : MonoBehaviour
     [SerializeField] private GameObject TeamGridElementPrefab;
     [SerializeField] private Transform TeamGridElementContainer;
 
+    private OWLData _dataSource;
     private List<TeamData> _data;
     private List<TeamGridElementController> _gridElements;
     private ObjectPool _pool;
@@ -40,15 +41,19 @@ public class TeamsViewController : MonoBehaviour
 
     private void OnDestroy()
     {
-        TeamGridElementController.OnGridElementSelected -= OnGridSelected;
+        TeamGridElementController.OnTeamSelectedEvent -= OnTeamSelected;
+        TeamGridElementController.OnPlayerSelectedEvent -= OnPlayerSelected;
     }
 
     #endregion
     
     #region Class Methods
 
-    public void Intialize(List<TeamData> teamsData)
+    public void Intialize(OWLData dataSource, List<TeamData> teamsData)
     {
+        // saving reference to OWLData
+        _dataSource = dataSource;
+        
         // creating object pool
         _pool = new ObjectPool(TeamGridElementPrefab, kObjectPoolSize);
         
@@ -57,7 +62,8 @@ public class TeamsViewController : MonoBehaviour
         _data.ForEach((team) => { CreateTeamGridElement(team); });
         
         // adding listeners
-        TeamGridElementController.OnGridElementSelected += OnGridSelected;
+        TeamGridElementController.OnTeamSelectedEvent += OnTeamSelected;
+        TeamGridElementController.OnPlayerSelectedEvent += OnPlayerSelected;
     }
 
     private void CreateTeamGridElement(TeamData team)
@@ -88,8 +94,13 @@ public class TeamsViewController : MonoBehaviour
     {
         
     }
+
+    private void OnPlayerSelected(object sender, TeamGridElementEventArgs e)
+    {
+        // TODO initialize stats controller, display stats view
+    }
     
-    private void OnGridSelected(object sender, TeamGridElementEventArgs e)
+    private void OnTeamSelected(object sender, TeamGridElementEventArgs e)
     {
         _pool.ReturnAllObjects();
         

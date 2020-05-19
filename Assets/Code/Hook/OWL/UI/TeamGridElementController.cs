@@ -8,11 +8,18 @@ using UnityEngine.UI;
 
 namespace Hook.OWL
 {
+    public enum TeamGridContentType
+    {
+        Teams,
+        Players
+    }
+    
     public class TeamGridElementController : MonoBehaviour
     {
         #region Events
 
-        public static EventHandler<TeamGridElementEventArgs> OnGridElementSelected;
+        public static EventHandler<TeamGridElementEventArgs> OnTeamSelectedEvent;
+        public static EventHandler<TeamGridElementEventArgs> OnPlayerSelectedEvent;
         
         #endregion
         
@@ -28,6 +35,7 @@ namespace Hook.OWL
         [SerializeField] private TextMeshProUGUI PlayerName;
         [SerializeField] private TextMeshProUGUI OverwatchName;
 
+        private TeamGridContentType _contentType;
         private TeamData _teamData;
         private PlayerProfileData _playerData;
         
@@ -49,6 +57,9 @@ namespace Hook.OWL
 
         public void Initialize(TeamData data)
         {
+            // setting content type
+            _contentType = TeamGridContentType.Teams;
+            
             // saving team data
             _teamData = data;
             
@@ -62,19 +73,35 @@ namespace Hook.OWL
             
             // loading team logo
             LoadImage(_teamData.TeamLogo);
+            
+            // displaying team view
+            TeamView.SetActive(true);
+            PlayerView.SetActive(false);
         }
 
         public void Initialize(PlayerProfileData data)
         {
+            // setting content type
+            _contentType = TeamGridContentType.Players;
+            
+            // saving player data
             _playerData = data;
 
-            TeamName.text = _playerData.PlayerName;
+            // setting player name
+            PlayerName.text = _playerData.PlayerName;
+            
+            // setting Overwatch name
+            OverwatchName.text = _playerData.OverwatchName;
             
             // loading player image
             if (!string.IsNullOrEmpty(_playerData.ProfileImageUrl))
             {
                 LoadImage(_playerData.ProfileImageUrl);
             }
+            
+            // displaying player view
+            TeamView.SetActive(false);
+            PlayerView.SetActive(true);
         }
         
         private void LoadImage(string assetPath)
@@ -104,14 +131,24 @@ namespace Hook.OWL
         
         #region Event Handlers
 
-        public void OnTeamSelected()
+        public void OnGridElementSelected()
         {
-            if (OnGridElementSelected != null)
+            if (_contentType == TeamGridContentType.Teams)
             {
-                OnGridElementSelected(this, new TeamGridElementEventArgs(_teamData));
+                if (OnTeamSelectedEvent != null)
+                {
+                    OnTeamSelectedEvent(this, new TeamGridElementEventArgs(_teamData));
+                }
+            }
+            else if (_contentType == TeamGridContentType.Players)
+            {
+                if (OnPlayerSelectedEvent != null)
+                {
+                    OnPlayerSelectedEvent(this, new TeamGridElementEventArgs(_playerData));
+                }
             }
         }
-        
+
         #endregion
     }
 }

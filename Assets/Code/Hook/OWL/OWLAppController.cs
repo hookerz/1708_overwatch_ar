@@ -27,7 +27,7 @@ namespace Hook.OWL
             
             var teams = _data.GetTeams();
             //teams.ForEach(team => Debug.LogFormat("[{0}] Roster: {1}", team.TeamName, team.Roster.Players.Count));
-            TeamsController.Intialize(teams);
+            TeamsController.Intialize(_data, teams);
         }
 
         void Update()

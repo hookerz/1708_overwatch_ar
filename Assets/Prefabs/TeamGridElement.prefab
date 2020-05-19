@@ -701,7 +701,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 5496413765850752135}
-        m_MethodName: OnTeamSelected
+        m_MethodName: OnGridElementSelected
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
