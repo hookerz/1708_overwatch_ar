@@ -26,6 +26,7 @@ namespace Hook.OWL
             _data = new OWLData(kDatabaseName);
             
             var teams = _data.GetTeams();
+            //teams.ForEach(team => Debug.LogFormat("[{0}] Roster: {1}", team.TeamName, team.Roster.Players.Count));
             TeamsController.Intialize(teams);
         }
 

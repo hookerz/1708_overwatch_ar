@@ -11,6 +11,7 @@ namespace Hook.OWL
         public string TeamName;
         public string TeamLogo;
         public string TeamColor;
+        public TeamRosterData Roster;
         
         #endregion
         

@@ -1,21 +1,35 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using Hook.HXF;
 using Hook.OWL;
 using UnityEngine;
 
 public class TeamsViewController : MonoBehaviour
 {
+    #region Constants
+
+    private const int kObjectPoolSize = 25;
+    
+    #endregion
+    
     #region Properties
 
     [SerializeField] private GameObject TeamGridElementPrefab;
     [SerializeField] private Transform TeamGridElementContainer;
 
     private List<TeamData> _data;
+    private List<TeamGridElementController> _gridElements;
+    private ObjectPool _pool;
     
     #endregion
     
     #region MonoBehaviour
-    
+
+    private void Awake()
+    {
+    }
+
     void Start()
     {
     }
@@ -23,25 +37,66 @@ public class TeamsViewController : MonoBehaviour
     void Update()
     {
     }
-    
+
+    private void OnDestroy()
+    {
+        TeamGridElementController.OnGridElementSelected -= OnGridSelected;
+    }
+
     #endregion
     
     #region Class Methods
 
     public void Intialize(List<TeamData> teamsData)
     {
+        // creating object pool
+        _pool = new ObjectPool(TeamGridElementPrefab, kObjectPoolSize);
+        
+        // saving TeamData, creating grid elements
         _data = teamsData;
         _data.ForEach((team) => { CreateTeamGridElement(team); });
-        //CreateTeamGridElement(_data[0]);
+        
+        // adding listeners
+        TeamGridElementController.OnGridElementSelected += OnGridSelected;
     }
 
     private void CreateTeamGridElement(TeamData team)
     {
-        // creating prefab instance
-        var gridElement = Instantiate(TeamGridElementPrefab, TeamGridElementContainer);
+        // getting prefab instance from object pool
+        var gridElement = _pool.GetObject();
+        gridElement.transform.SetParent(TeamGridElementContainer);
         gridElement.name = team.TeamName;
         var gridController = gridElement.GetComponent<TeamGridElementController>();
         gridController.Initialize(team);
+    }
+
+    private void CreatePlayerGridElement(PlayerProfileData player)
+    {
+        // getting prefab instance from object pool
+        var gridElement = _pool.GetObject();
+        gridElement.transform.SetParent(TeamGridElementContainer);
+        gridElement.name = player.PlayerName;
+        var gridController = gridElement.GetComponent<TeamGridElementController>();
+        gridController.Initialize(player);
+    }
+    
+    #endregion
+    
+    #region Event Handlers
+
+    private void OnBackSelected()
+    {
+        
+    }
+    
+    private void OnGridSelected(object sender, TeamGridElementEventArgs e)
+    {
+        _pool.ReturnAllObjects();
+        
+        e.SelectedTeam.Roster.Players.ForEach((player) =>
+        {
+            CreatePlayerGridElement(player);
+        });
     }
     
     #endregion

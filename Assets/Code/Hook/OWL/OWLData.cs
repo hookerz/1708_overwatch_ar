@@ -37,13 +37,16 @@ namespace Hook.OWL
         {
             string query = String.Format("SELECT * FROM Teams");
             var results = _db.RunQuery<List<TeamData>>(query);
+            
+            // getting team roster
+            results.ForEach(team => { team.Roster = GetTeamRoster(team.TeamName); });
 
             return results;
         }
         
         public TeamRosterData GetTeamRoster(string teamName)
         {
-            string query = String.Format("SELECT PlayerName, OverwatchName FROM Players P INNER JOIN Teams T ON P.TeamId = T.TeamId WHERE lower(T.TeamName) = '{0}'", teamName.ToLower());
+            string query = String.Format("SELECT PlayerName, OverwatchName, ProfileImageUrl FROM Players P INNER JOIN Teams T ON P.TeamId = T.TeamId WHERE lower(T.TeamName) = '{0}'", teamName.ToLower());
 
             var roster = new TeamRosterData(_db.RunQuery<List<PlayerProfileData>>(query));
 
