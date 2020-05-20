@@ -10,6 +10,7 @@ namespace Hook.OWL
         #region Constants
 
         private const int kObjectPoolSize = 25;
+        private const float kDelayBetweenAnimations = 0.05f;
         
         #endregion
         
@@ -82,8 +83,33 @@ namespace Hook.OWL
             var gridElement = _pool.GetObject();
             gridElement.transform.SetParent(TeamGridElementContainer);
             gridElement.name = player.PlayerName;
+            
+            // getting TeamGridElementController
             var gridController = gridElement.GetComponent<TeamGridElementController>();
             gridController.Initialize(player);
+        }
+
+        private Sequence Transition(bool shouldEnter, float delay)
+        {
+            var startAlpha = shouldEnter ? 0 : 1f;
+            var endAlpha = shouldEnter ? 1 : 0f;
+            var newScale = Vector3.one * (shouldEnter ? 1f : 1.2f);
+            var elements = TeamGridElementContainer.GetComponentsInChildren<TeamGridElementController>();
+            var newSequence = DOTween.Sequence();
+            var index = 0;
+            foreach (var element in elements)
+            {
+                var canvasGroup = element.GetComponent<CanvasGroup>();
+                var alphaTween = DOVirtual.Float(startAlpha, endAlpha, .25f, alphaLevel => { canvasGroup.alpha = alphaLevel; });
+                var scaleTween = element.transform.DOScale(newScale, .15f);
+                newSequence.Insert(index * delay, alphaTween);
+                newSequence.Insert(index * delay, scaleTween);
+                index++;
+            }
+
+            newSequence.OnStart(() => { Debug.LogFormat("{0} starting...", shouldEnter ? "ENTER" : "EXIT"); });
+
+            return newSequence;
         }
         
         #endregion
@@ -102,11 +128,17 @@ namespace Hook.OWL
         
         private void OnTeamSelected(object sender, TeamGridElementEventArgs e)
         {
-            _pool.ReturnAllObjects();
-            
-            e.SelectedTeam.Roster.Players.ForEach((player) =>
+            var newSequence = Transition(false, kDelayBetweenAnimations);
+            newSequence.OnComplete(() =>
             {
-                CreatePlayerGridElement(player);
+                _pool.ReturnAllObjects();
+            
+                e.SelectedTeam.Roster.Players.ForEach((player) =>
+                {
+                    CreatePlayerGridElement(player);
+                });
+                
+                Transition(true, .075f);
             });
         }
         
