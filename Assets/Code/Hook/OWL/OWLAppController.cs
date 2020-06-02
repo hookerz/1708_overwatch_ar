@@ -17,6 +17,7 @@ namespace Hook.OWL
         #region Properties
 
         [SerializeField] private TeamsRosterViewController teamsRosterController;
+        [SerializeField] private PlayerViewController playerController;
         
         private OWLData _data;
     
@@ -26,6 +27,7 @@ namespace Hook.OWL
 
         private void Awake()
         {
+            OWLEvents.OnPlayerViewSelected += OnPlayerViewSelected;
             InputEvents.OnAndroidBackButtonDetected += OnAndroidBackButtonSelected;
         }
 
@@ -44,6 +46,7 @@ namespace Hook.OWL
 
         private void OnDestroy()
         {
+            OWLEvents.OnPlayerViewSelected -= OnPlayerViewSelected;
             InputEvents.OnAndroidBackButtonDetected -= OnAndroidBackButtonSelected;
         }
 
@@ -65,6 +68,13 @@ namespace Hook.OWL
 
         private void OnAndroidBackButtonSelected(object sender, EventArgs e)
         {
+        }
+
+        private void OnPlayerViewSelected(object sender, OWLEventArgs e)
+        {
+            teamsRosterController.gameObject.SetActive(false);
+            playerController.gameObject.SetActive(true);
+            playerController.Initialize(e.SelectedPlayer);
         }
         
         #endregion

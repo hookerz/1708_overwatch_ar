@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using Hook.HXF;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -71,7 +72,8 @@ namespace Hook.OWL
             Background.color = backgroundColor;
             
             // loading team logo
-            LoadImage(_teamData.TeamLogo, TeamLogo);
+            AssetLoader.LoadImage(_teamData.TeamLogo, TeamLogo);
+            //LoadImage(_teamData.TeamLogo, TeamLogo);
             
             // displaying team view
             TeamView.SetActive(true);
@@ -98,7 +100,8 @@ namespace Hook.OWL
             // loading player image
             if (!string.IsNullOrEmpty(_playerData.ProfileImageUrl))
             {
-                LoadImage(_playerData.ProfileImageUrl, PlayerLogo);
+                AssetLoader.LoadImage(_playerData.ProfileImageUrl, PlayerLogo);
+                //LoadImage(_playerData.ProfileImageUrl, PlayerLogo);
             }
             
             // displaying player view

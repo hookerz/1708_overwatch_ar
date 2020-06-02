@@ -917,7 +917,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bf954212dfa448da82e9340fcd465aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  teamsRosterController: {fileID: 0}
+  teamsRosterController: {fileID: 1738212455}
+  playerController: {fileID: 784914228}
 --- !u!4 &524129638
 Transform:
   m_ObjectHideFlags: 0

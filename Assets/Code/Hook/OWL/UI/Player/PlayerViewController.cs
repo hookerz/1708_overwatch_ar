@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using Hook.HXF;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,6 +26,20 @@ namespace Hook.OWL
 
         void Update()
         {
+        }
+        
+        #endregion
+        
+        #region Class Methods
+
+        public void Initialize(PlayerProfileData player)
+        {
+            // loading player image
+            AssetLoader.LoadImage(player.ProfileImageUrl, PlayerImage);
+            
+            // setting Overwatch, player name
+            OverwatchName.text = player.OverwatchName;
+            PlayerName.text = player.PlayerName;
         }
         
         #endregion

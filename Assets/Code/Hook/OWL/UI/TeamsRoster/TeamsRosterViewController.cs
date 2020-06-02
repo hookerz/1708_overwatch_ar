@@ -123,7 +123,10 @@ namespace Hook.OWL
 
         private void OnPlayerSelected(object sender, TeamGridElementEventArgs e)
         {
-            // TODO initialize stats controller, display stats view
+            if (OWLEvents.OnPlayerViewSelected != null)
+            {
+                OWLEvents.OnPlayerViewSelected(this, new OWLEventArgs(e.SelectedPlayer));
+            }
         }
         
         private void OnTeamSelected(object sender, TeamGridElementEventArgs e)
