@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Hook.OWL
 {
-    public class TeamsViewController : MonoBehaviour
+    public class TeamsRosterViewController : MonoBehaviour
     {
         #region Constants
 

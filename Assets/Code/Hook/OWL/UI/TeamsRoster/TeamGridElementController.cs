@@ -27,28 +27,27 @@ namespace Hook.OWL
 
         [SerializeField] private GameObject TeamView;
         [SerializeField] private GameObject PlayerView;
-        [SerializeField] private Image TeamLogo;
         [SerializeField] private Image Background;
         [Header("Team view properties")]
-        [SerializeField] private Text TeamName;
+        [SerializeField] private TextMeshProUGUI TeamName;
+        [SerializeField] private Image TeamLogo;
         [Header("Player view properties")]
         [SerializeField] private TextMeshProUGUI PlayerName;
         [SerializeField] private TextMeshProUGUI OverwatchName;
+        [SerializeField] private Image PlayerLogo;
 
         private TeamGridContentType _contentType;
         private TeamData _teamData;
         private PlayerProfileData _playerData;
+        private Color _initialBackgroundColor;
         
         #endregion
         
         #region MonoBehaviour
-        
-        void Start()
-        {
-        }
 
-        void Update()
+        private void Awake()
         {
+            _initialBackgroundColor = Background.color;
         }
         
         #endregion
@@ -72,7 +71,7 @@ namespace Hook.OWL
             Background.color = backgroundColor;
             
             // loading team logo
-            LoadImage(_teamData.TeamLogo);
+            LoadImage(_teamData.TeamLogo, TeamLogo);
             
             // displaying team view
             TeamView.SetActive(true);
@@ -93,10 +92,13 @@ namespace Hook.OWL
             // setting Overwatch name
             OverwatchName.text = _playerData.OverwatchName;
             
+            // setting background color
+            Background.color = _initialBackgroundColor;
+            
             // loading player image
             if (!string.IsNullOrEmpty(_playerData.ProfileImageUrl))
             {
-                LoadImage(_playerData.ProfileImageUrl);
+                LoadImage(_playerData.ProfileImageUrl, PlayerLogo);
             }
             
             // displaying player view
@@ -104,7 +106,7 @@ namespace Hook.OWL
             PlayerView.SetActive(true);
         }
         
-        private void LoadImage(string assetPath)
+        private void LoadImage(string assetPath, Image logo)
         {
             // getting path to image
             var path = string.Format("{0}/{1}", Application.streamingAssetsPath, assetPath);
@@ -118,10 +120,10 @@ namespace Hook.OWL
             
             // creating/applying sprite to Image component
             var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
-            TeamLogo.sprite = sprite;
+            logo.sprite = sprite;
 
             // updating aspect ratio based on height
-            var imageTransform = TeamLogo.GetComponent<RectTransform>();
+            var imageTransform = logo.GetComponent<RectTransform>();
             var currentAspectRatio = (float)texture.width / texture.height;
             var newWidth = imageTransform.rect.height * currentAspectRatio;
             imageTransform.sizeDelta = new Vector2(newWidth, imageTransform.rect.height);

@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using Hook.HXF;
+using System.Collections.Generic;
+using Hook.PlayerInput;
 using UnityEngine;
 
 namespace Hook.OWL
@@ -13,27 +16,37 @@ namespace Hook.OWL
         
         #region Properties
 
-        [SerializeField] private TeamsViewController TeamsController;
+        [SerializeField] private TeamsRosterViewController teamsRosterController;
         
         private OWLData _data;
     
         #endregion
         
         #region MonoBehaviour
-        
+
+        private void Awake()
+        {
+            InputEvents.OnAndroidBackButtonDetected += OnAndroidBackButtonSelected;
+        }
+
         void Start()
         {
             _data = new OWLData(kDatabaseName);
             
             var teams = _data.GetTeams();
             //teams.ForEach(team => Debug.LogFormat("[{0}] Roster: {1}", team.TeamName, team.Roster.Players.Count));
-            TeamsController.Intialize(_data, teams);
+            teamsRosterController.Intialize(_data, teams);
         }
 
         void Update()
         {
         }
-        
+
+        private void OnDestroy()
+        {
+            InputEvents.OnAndroidBackButtonDetected -= OnAndroidBackButtonSelected;
+        }
+
         #endregion
         
         #region Class Methods
@@ -44,6 +57,14 @@ namespace Hook.OWL
             {
                 Debug.Log(dataPoint);
             });
+        }
+        
+        #endregion
+        
+        #region Event Handlers
+
+        private void OnAndroidBackButtonSelected(object sender, EventArgs e)
+        {
         }
         
         #endregion
