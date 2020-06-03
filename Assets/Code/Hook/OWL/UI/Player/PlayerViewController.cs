@@ -15,6 +15,7 @@ namespace Hook.OWL
         [SerializeField] private Image PlayerImage;
         [SerializeField] private TextMeshProUGUI OverwatchName;
         [SerializeField] private TextMeshProUGUI PlayerName;
+        [SerializeField] private GameObject StatGridElementPrefab;
         
         #endregion
         
