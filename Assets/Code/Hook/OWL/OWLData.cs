@@ -2,6 +2,7 @@
 using Hook.HXF;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Hook.OWL
@@ -55,9 +56,19 @@ namespace Hook.OWL
     
         public List<HeroData> GetAllHeroes(string playerName)
         {
-            string query = String.Format("SELECT Hero, COUNT(Hero) AS UsageCount, sum(B.Elims) AS Eliminations, sum(B.FinalBlows) AS FinalBlows, sum(B.Deaths) AS Deaths, sum(B.Assists) AS Assists FROM BattleStats B WHERE lower(B.Player)='{0}' GROUP BY B.Hero", playerName.ToLower());
+            string query = String.Format(@"
+                SELECT Hero, COUNT(Hero) AS UsageCount, sum(B.Elims) AS Eliminations, sum(B.FinalBlows) AS FinalBlows, sum(B.Deaths) AS Deaths, sum(B.Assists) AS Assists , H.ImageAsset AS HeroImageUrl
+                FROM BattleStats B 
+                INNER JOIN Heroes H
+                WHERE lower(B.Player)='{0}' AND Hero == H.Name
+                GROUP BY B.Hero"
+                , playerName.ToLower());
             
             var data = _db.RunQuery<List<HeroData>>(query);
+
+            // calculating percent used for each hero
+            double total = data.Sum(hero => hero.UsageCount);
+            data.ForEach(hero => hero.Percent = hero.UsageCount / total);
 
             return data;
         }

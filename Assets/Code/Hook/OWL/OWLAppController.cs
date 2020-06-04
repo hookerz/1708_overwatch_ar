@@ -36,7 +36,6 @@ namespace Hook.OWL
             _data = new OWLData(kDatabaseName);
             
             var teams = _data.GetTeams();
-            //teams.ForEach(team => Debug.LogFormat("[{0}] Roster: {1}", team.TeamName, team.Roster.Players.Count));
             teamsRosterController.Intialize(_data, teams);
         }
 
@@ -72,9 +71,14 @@ namespace Hook.OWL
 
         private void OnPlayerViewSelected(object sender, OWLEventArgs e)
         {
+            // TODO perform transition to player view here
+            
+            // hiding team/roster view
             teamsRosterController.gameObject.SetActive(false);
+            
+            // displaying player view
             playerController.gameObject.SetActive(true);
-            playerController.Initialize(e.SelectedPlayer);
+            playerController.Initialize(_data, e.SelectedPlayer);
         }
         
         #endregion

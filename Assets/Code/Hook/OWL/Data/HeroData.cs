@@ -13,6 +13,8 @@ namespace Hook.OWL
         public int FinalBlows;
         public int Deaths;
         public int Assists;
+        public string HeroImageUrl;
+        public double Percent;
 
         #endregion
     }
