@@ -101,9 +101,8 @@ namespace Hook.HXF
             
             // creating response object
             var json = sb.ToString();
-            Debug.Log(json);
             var data = JsonMapper.ToObject<T>(json);
-
+            
             return data;
         }
         

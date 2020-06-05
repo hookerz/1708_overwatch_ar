@@ -16,7 +16,10 @@ namespace Hook.OWL
         [SerializeField] private TextMeshProUGUI OverwatchName;
         [SerializeField] private TextMeshProUGUI PlayerName;
         [SerializeField] private GameObject StatGridElementPrefab;
-
+        [SerializeField] private Transform StatGridContainer;
+        [SerializeField] private GameObject HeroGridElementPrefab;
+        [SerializeField] private Transform HeroGridContainer;
+        
         private OWLData _data;
         
         #endregion
@@ -54,6 +57,30 @@ namespace Hook.OWL
             var heroesUsed = _data.GetAllHeroes(player.OverwatchName);
             
             // TODO populate heroes used view
+            PopulateHeroes(heroesUsed);
+        }
+
+        private void PopulateHeroes(List<HeroData> heroes)
+        {
+            var layoutGroup = HeroGridContainer.GetComponent<VerticalLayoutGroup>();
+            float height = layoutGroup.padding.top + layoutGroup.padding.bottom;
+            float spacing = layoutGroup.spacing;
+            
+            // creating hero grid elements
+            heroes.ForEach(hero =>
+            {
+                var grid = Instantiate(HeroGridElementPrefab);
+                var gridController = grid.GetComponent<HeroGridElementController>();
+                gridController.Initialize(hero);
+                grid.transform.SetParent(HeroGridContainer);
+                
+                height += (spacing + grid.GetComponent<RectTransform>().rect.height);
+            });
+            
+            // updating hero container height
+            var rectTransform = HeroGridContainer.GetComponent<RectTransform>();
+            rectTransform.sizeDelta = new Vector2(rectTransform.rect.width, height);
+
         }
         
         #endregion

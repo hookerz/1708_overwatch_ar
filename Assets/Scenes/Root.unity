@@ -1274,7 +1274,12 @@ MonoBehaviour:
   PlayerImage: {fileID: 664643550}
   OverwatchName: {fileID: 1830019412}
   PlayerName: {fileID: 392038721}
-  StatGridElementPrefab: {fileID: 0}
+  StatGridElementPrefab: {fileID: 6592236450131229128, guid: 7cf47a796eeb44f6a955bc23211c53cd,
+    type: 3}
+  StatGridContainer: {fileID: 1667070597}
+  HeroGridElementPrefab: {fileID: 532230655567425051, guid: 46ae1a73702d94268b0313f1d10277fa,
+    type: 3}
+  HeroGridContainer: {fileID: 147337605}
 --- !u!1 &853426435
 GameObject:
   m_ObjectHideFlags: 0
@@ -1953,7 +1958,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ShowMaskGraphic: 1
+  m_ShowMaskGraphic: 0
 --- !u!114 &1434424373
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1991,7 +1996,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1434424370}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -2739,26 +2744,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 147337605}
     m_Modifications:
-    - target: {fileID: 532230655190524430, guid: 46ae1a73702d94268b0313f1d10277fa,
-        type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 532230655190524430, guid: 46ae1a73702d94268b0313f1d10277fa,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 532230655190524430, guid: 46ae1a73702d94268b0313f1d10277fa,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 440
-      objectReference: {fileID: 0}
-    - target: {fileID: 532230655190524430, guid: 46ae1a73702d94268b0313f1d10277fa,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 80
-      objectReference: {fileID: 0}
     - target: {fileID: 532230655567425050, guid: 46ae1a73702d94268b0313f1d10277fa,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2817,22 +2802,22 @@ PrefabInstance:
     - target: {fileID: 532230655567425050, guid: 46ae1a73702d94268b0313f1d10277fa,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 541.73334
+      value: 540
       objectReference: {fileID: 0}
     - target: {fileID: 532230655567425050, guid: 46ae1a73702d94268b0313f1d10277fa,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -50
+      value: -70
       objectReference: {fileID: 0}
     - target: {fileID: 532230655567425050, guid: 46ae1a73702d94268b0313f1d10277fa,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 983.4667
+      value: 980
       objectReference: {fileID: 0}
     - target: {fileID: 532230655567425050, guid: 46ae1a73702d94268b0313f1d10277fa,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 80
+      value: 120
       objectReference: {fileID: 0}
     - target: {fileID: 532230655567425050, guid: 46ae1a73702d94268b0313f1d10277fa,
         type: 3}
@@ -2869,40 +2854,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HeroGridElement
       objectReference: {fileID: 0}
-    - target: {fileID: 532230655900623481, guid: 46ae1a73702d94268b0313f1d10277fa,
+    - target: {fileID: 532230655567425051, guid: 46ae1a73702d94268b0313f1d10277fa,
         type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 532230655900623481, guid: 46ae1a73702d94268b0313f1d10277fa,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 532230655900623481, guid: 46ae1a73702d94268b0313f1d10277fa,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 310
-      objectReference: {fileID: 0}
-    - target: {fileID: 532230655900623481, guid: 46ae1a73702d94268b0313f1d10277fa,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 80
-      objectReference: {fileID: 0}
-    - target: {fileID: 532230657223224083, guid: 46ae1a73702d94268b0313f1d10277fa,
-        type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 532230657223224083, guid: 46ae1a73702d94268b0313f1d10277fa,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 532230657223224083, guid: 46ae1a73702d94268b0313f1d10277fa,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 80
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46ae1a73702d94268b0313f1d10277fa, type: 3}
@@ -3285,6 +3240,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: StatGridElement
+      objectReference: {fileID: 0}
+    - target: {fileID: 6592236450131229128, guid: 7cf47a796eeb44f6a955bc23211c53cd,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6592236450131229129, guid: 7cf47a796eeb44f6a955bc23211c53cd,
         type: 3}
