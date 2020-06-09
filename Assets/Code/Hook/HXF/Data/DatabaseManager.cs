@@ -86,6 +86,10 @@ namespace Hook.HXF
                         writer.Write(double.Parse(content.ToString()));
                         //writer.Write((double)content);
                     }
+                    else if (content is Double)
+                    {
+                        writer.Write(double.Parse(content.ToString()));
+                    }
                     else if (content is string)
                     {
                         writer.Write(content.ToString());

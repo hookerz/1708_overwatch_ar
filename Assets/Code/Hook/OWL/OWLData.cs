@@ -57,7 +57,20 @@ namespace Hook.OWL
         public List<HeroData> GetAllHeroes(string playerName)
         {
             string query = String.Format(@"
-                SELECT Hero, COUNT(Hero) AS UsageCount, sum(B.Elims) AS Eliminations, sum(B.FinalBlows) AS FinalBlows, sum(B.Deaths) AS Deaths, sum(B.Assists) AS Assists , H.ImageAsset AS HeroImageUrl
+                SELECT  Hero, 
+                        COUNT(Hero) AS UsageCount, 
+                        sum(B.Elims) AS Eliminations, 
+                        sum(B.FinalBlows) AS FinalBlows, 
+                        sum(B.Deaths) AS Deaths, 
+                        sum(B.Assists) AS Assists,
+                        sum(B.HeroDamage) AS HeroDamage,
+                        sum(B.BarrierDamage) AS BarrierDamage,
+                        sum(B.DamageTaken) AS DamageTaken,
+                        sum(B.HealingReceived) AS HealingReceived,
+                        sum(B.DamageBlocked) AS DamageBlocked,
+                        sum(B.UltimatesUsed) AS UltimatesUsed,
+                        sum(B.SoloKills) AS SoloKills,
+                        H.ImageAsset AS HeroImageUrl
                 FROM BattleStats B 
                 INNER JOIN Heroes H
                 WHERE lower(B.Player)='{0}' AND Hero == H.Name
@@ -69,7 +82,26 @@ namespace Hook.OWL
             // calculating percent used for each hero
             double total = data.Sum(hero => hero.UsageCount);
             data.ForEach(hero => hero.Percent = hero.UsageCount / total);
-
+            
+            // calculting totals for all hero stats
+            var heroTotals = new HeroData();
+            heroTotals.Hero = "Total";
+            heroTotals.UsageCount = data.Sum(hero => hero.UsageCount);
+            heroTotals.Eliminations = data.Sum(hero => hero.Eliminations);
+            heroTotals.FinalBlows = data.Sum(hero => hero.FinalBlows);
+            heroTotals.Deaths = data.Sum(hero => hero.Deaths);
+            heroTotals.Assists = data.Sum(hero => hero.Assists);
+            heroTotals.HeroDamage = data.Sum(hero => hero.HeroDamage);
+            heroTotals.BarrierDamage = data.Sum(hero => hero.BarrierDamage);
+            heroTotals.DamageTaken = data.Sum(hero => hero.DamageTaken);
+            heroTotals.HealingReceived = data.Sum(hero => hero.HealingReceived);
+            heroTotals.DamageBlocked = data.Sum(hero => hero.DamageBlocked);
+            heroTotals.UltimatesUsed = data.Sum(hero => hero.UltimatesUsed);
+            heroTotals.SoloKills = data.Sum(hero => hero.SoloKills);
+            
+            // adding total to hero list
+            data.Add(heroTotals);
+            
             return data;
         }
 

@@ -28,5 +28,16 @@ namespace Hook.OWL
         }
         
         #endregion
+        
+        #region Class Methods
+
+        public void Initialize(string statValue, string statLabel, string detailStat)
+        {
+            StatValueText.text = statValue;
+            StatLabelText.text = statLabel;
+            DetailStatText.text = detailStat;
+        }
+        
+        #endregion
     }
 }
