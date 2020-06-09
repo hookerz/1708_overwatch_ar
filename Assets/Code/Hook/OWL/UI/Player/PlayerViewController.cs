@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Hook.HXF;
 using TMPro;
 using UnityEngine;
@@ -19,6 +20,7 @@ namespace Hook.OWL
         [SerializeField] private Image PlayerImage;
         [SerializeField] private TextMeshProUGUI OverwatchName;
         [SerializeField] private TextMeshProUGUI PlayerName;
+        [SerializeField] private TextMeshProUGUI CareerStatsDescription;
         [SerializeField] private GameObject StatGridElementPrefab;
         [SerializeField] private Transform StatGridContainer;
         [SerializeField] private GameObject HeroGridElementPrefab;
@@ -64,14 +66,15 @@ namespace Hook.OWL
             heroesUsed.Remove(_heroTotals);
             _heroes = heroesUsed;
             
-            // TODO populate career stats view
-            PopulateCareerStats();
+            // populate career stats view
+            CareerStatsDescription.text = _heroTotals.Hero;
+            PopulateCareerStats(_heroTotals);
             
-            // TODO populate heroes used view
+            // populate heroes used view
             PopulateHeroes(_heroes);
         }
 
-        private void PopulateCareerStats()
+        private void PopulateCareerStats(HeroData heroData)
         {
             // getting layout group dimensions
             var layoutGroup = StatGridContainer.GetComponent<GridLayoutGroup>();
@@ -79,7 +82,7 @@ namespace Hook.OWL
             
             // getting fields to create career stats for
             var fieldsToSkip = new String[] {"Hero", "UsageCount", "HeroImageUrl", "Percent"};
-            var fields = _heroTotals.GetType().GetFields();
+            var fields = heroData.GetType().GetFields();
             
             // getting total height of stat grid
             var totalFields = fields.Length - fieldsToSkip.Length;
@@ -95,7 +98,7 @@ namespace Hook.OWL
                 {
                     var grid = Instantiate(StatGridElementPrefab, StatGridContainer);
                     var gridController = grid.GetComponent<StatGridElementController>();
-                    gridController.Initialize(f.GetValue(_heroTotals).ToString(), fieldName, "");
+                    gridController.Initialize(f.GetValue(heroData).ToString(), ParseCamelCase(fieldName), "");
                 }
             }
             
@@ -113,10 +116,10 @@ namespace Hook.OWL
             // creating hero grid elements
             heroes.ForEach(hero =>
             {
-                var grid = Instantiate(HeroGridElementPrefab);
+                var grid = Instantiate(HeroGridElementPrefab, HeroGridContainer);
                 var gridController = grid.GetComponent<HeroGridElementController>();
                 gridController.Initialize(hero);
-                grid.transform.SetParent(HeroGridContainer);
+                gridController.OnHeroGridElementSelected += OnHeroGridElementSelected;
                 height += (spacing + grid.GetComponent<RectTransform>().rect.height);
             });
             
@@ -125,15 +128,48 @@ namespace Hook.OWL
             rectTransform.sizeDelta = new Vector2(rectTransform.rect.width, height);
         }
 
-        private void CreateStatGridElement(string statValue, string statLabel, string detailStat)
+        private void UpdateCareerStats(HeroData heroData)
         {
+            // getting all StatGridElementController instances
+            var statGridElements = StatGridContainer.GetComponentsInChildren<StatGridElementController>();
             
+            // getting fields to create career stats for
+            var fieldsToSkip = new String[] {"Hero", "UsageCount", "HeroImageUrl", "Percent"};
+            var fields = heroData.GetType().GetFields();
+            var index = 0;
+            
+            // creating stat grid elements
+            foreach (var f in fields)
+            {
+                var fieldName = f.Name;
+                if (!fieldsToSkip.Contains(fieldName))
+                {
+                    var gridController = statGridElements[index];
+                    gridController.Initialize(f.GetValue(heroData).ToString(), ParseCamelCase(fieldName), "");
+
+                    index++;
+                }
+            }
+        }
+
+        private string ParseCamelCase(string str)
+        {
+            return Regex.Replace( Regex.Replace( str, @"(\P{Ll})(\P{Ll}\p{Ll})", "$1 $2" ), @"(\p{Ll})(\P{Ll})", "$1 $2" );
         }
         
         #endregion
         
         #region Event Handlers
 
+        private void OnHeroGridElementSelected(HeroData obj, bool isSelected)
+        {
+            var heroData = isSelected ? obj : _heroTotals;
+            
+            CareerStatsDescription.text = heroData.Hero;
+            
+            UpdateCareerStats(heroData);
+        }
+        
         public void OnOverviewSelected()
         {
             

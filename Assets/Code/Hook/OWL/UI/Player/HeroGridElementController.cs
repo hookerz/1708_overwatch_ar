@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using DG.Tweening;
 using Hook.HXF;
+using JetBrains.Annotations;
 using TMPro;
-using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +13,8 @@ namespace Hook.OWL
     {
         #region Properties
 
+        [CanBeNull] public Action<HeroData, bool> OnHeroGridElementSelected;
+        
         [SerializeField] private TextMeshProUGUI HeroName;
         [SerializeField] private Image HeroImage;
         [SerializeField] private Image Progress;
@@ -21,6 +22,7 @@ namespace Hook.OWL
         private HeroData _heroData;
         private RectTransform _transform;
         private bool _hasDisplayed;
+        private bool _isSelected;
         
         #endregion
         
@@ -73,6 +75,17 @@ namespace Hook.OWL
                 }
                 yield return new WaitForSeconds(.1f);
             } while (true);
+        }
+        
+        #endregion
+        
+        #region Event Handlers
+
+        public void OnHeroSelected()
+        {
+            _isSelected = !_isSelected;
+            
+            OnHeroGridElementSelected?.Invoke(_heroData, _isSelected);
         }
         
         #endregion
