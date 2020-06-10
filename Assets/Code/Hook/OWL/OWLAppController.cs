@@ -37,6 +37,8 @@ namespace Hook.OWL
             
             var teams = _data.GetTeams();
             teamsRosterController.Intialize(_data, teams);
+            
+            playerController.gameObject.SetActive(false);
         }
 
         void Update()

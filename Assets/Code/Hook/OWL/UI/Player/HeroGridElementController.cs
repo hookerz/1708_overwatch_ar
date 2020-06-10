@@ -18,8 +18,10 @@ namespace Hook.OWL
         [SerializeField] private TextMeshProUGUI HeroName;
         [SerializeField] private Image HeroImage;
         [SerializeField] private Image Progress;
+        [SerializeField] private TextMeshProUGUI HeroMetricValue;
 
         private HeroData _heroData;
+        private int _heroMetricValue;
         private RectTransform _transform;
         private bool _hasDisplayed;
         private bool _isSelected;
@@ -45,16 +47,26 @@ namespace Hook.OWL
         
         #region Class Methods
 
-        public void Initialize(HeroData heroData)
+        public void Initialize(HeroData heroData, int heroMetricValue)
         {
             _heroData = heroData;
+            _heroMetricValue = heroMetricValue;
             
             // setting hero name
             HeroName.text = heroData.Hero;
             
+            // setting hero metric value
+            HeroMetricValue.gameObject.SetActive(true);
+            HeroMetricValue.text = _heroMetricValue.ToString();
+            
             // loading hero image
-            AssetLoader.LoadImage(heroData.HeroImageUrl, HeroImage);
+            if (HeroImage.sprite == null)
+            {
+                AssetLoader.LoadImage(heroData.HeroImageUrl, HeroImage);
+            }
 
+            _hasDisplayed = false;
+            
             StartCoroutine(CheckVisibility());
         }
 

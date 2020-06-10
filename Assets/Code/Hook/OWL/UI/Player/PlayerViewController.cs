@@ -25,6 +25,7 @@ namespace Hook.OWL
         [SerializeField] private Transform StatGridContainer;
         [SerializeField] private GameObject HeroGridElementPrefab;
         [SerializeField] private Transform HeroGridContainer;
+        [SerializeField] private TMP_Dropdown HeroMetricsDropdown;
         
         private OWLData _data;
         private List<HeroData> _heroes;
@@ -118,7 +119,7 @@ namespace Hook.OWL
             {
                 var grid = Instantiate(HeroGridElementPrefab, HeroGridContainer);
                 var gridController = grid.GetComponent<HeroGridElementController>();
-                gridController.Initialize(hero);
+                gridController.Initialize(hero, hero.UsageCount);
                 gridController.OnHeroGridElementSelected += OnHeroGridElementSelected;
                 height += (spacing + grid.GetComponent<RectTransform>().rect.height);
             });
@@ -168,6 +169,81 @@ namespace Hook.OWL
             CareerStatsDescription.text = heroData.Hero;
             
             UpdateCareerStats(heroData);
+        }
+
+        public void OnHeroOptionSelected(int index)
+        {
+            var heroGridElements = HeroGridContainer.GetComponentsInChildren<HeroGridElementController>();
+            var selectedMetric = HeroMetricsDropdown.options[HeroMetricsDropdown.value].text.ToLower();
+            if (string.Equals(selectedMetric, "usage count"))
+            {
+                // calculating percent used for each hero
+                double total = _heroes.Sum(hero => hero.UsageCount);
+                _heroes.ForEach(hero => hero.Percent = hero.UsageCount / total);
+                int current = 0;
+                foreach (var heroGrid in heroGridElements)
+                {
+                    var heroData = _heroes[current];
+                    heroGrid.Initialize(heroData, heroData.UsageCount);
+                    current++;
+                }
+            }
+            else if (string.Equals(selectedMetric, "eliminations"))
+            {
+                // calculating percent used for each hero
+                double total = _heroes.Sum(hero => hero.Eliminations);
+                _heroes.ForEach(hero => hero.Percent = hero.Eliminations / total);
+                int current = 0;
+                foreach (var heroGrid in heroGridElements)
+                {
+                    var heroData = _heroes[current];
+                    heroGrid.Initialize(heroData, heroData.Eliminations);
+                    current++;
+                }
+            }
+            else if (string.Equals(selectedMetric, "final blows"))
+            {
+                // calculating percent used for each hero
+                double total = _heroes.Sum(hero => hero.FinalBlows);
+                _heroes.ForEach(hero => hero.Percent = hero.FinalBlows / total);
+                int current = 0;
+                foreach (var heroGrid in heroGridElements)
+                {
+                    var heroData = _heroes[current];
+                    heroGrid.Initialize(heroData, heroData.FinalBlows);
+                    current++;
+                }
+            }
+            else if (string.Equals(selectedMetric, "deaths"))
+            {
+                // calculating percent used for each hero
+                double total = _heroes.Sum(hero => hero.Deaths);
+                _heroes.ForEach(hero => hero.Percent = hero.Deaths / total);
+                int current = 0;
+                foreach (var heroGrid in heroGridElements)
+                {
+                    var heroData = _heroes[current];
+                    heroGrid.Initialize(heroData, heroData.Deaths);
+                    current++;
+                }
+            }
+            else if (string.Equals(selectedMetric, "assists"))
+            {
+                // calculating percent used for each hero
+                double total = _heroes.Sum(hero => hero.Assists);
+                _heroes.ForEach(hero => hero.Percent = hero.Assists / total);
+                int current = 0;
+                foreach (var heroGrid in heroGridElements)
+                {
+                    var heroData = _heroes[current];
+                    heroGrid.Initialize(heroData, heroData.Assists);
+                    current++;
+                }
+            }
+            else if (string.Equals(selectedMetric, "time played"))
+            {
+                // TODO calculate total time played per hero
+            }
         }
         
         public void OnOverviewSelected()
