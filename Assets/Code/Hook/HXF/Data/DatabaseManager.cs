@@ -90,14 +90,16 @@ namespace Hook.HXF
                     {
                         writer.Write(double.Parse(content.ToString()));
                     }
-                    else if (content is string)
+                    else
                     {
                         writer.Write(content.ToString());
                     }
+                    /*
                     else
                     {
                         Debug.LogErrorFormat("Error! No found type for {0} ({1})", content.ToString(), content.GetType().ToString());
                     }
+                    */
                 }
                 writer.WriteObjectEnd();
             }

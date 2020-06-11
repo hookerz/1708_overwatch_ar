@@ -21,6 +21,8 @@ namespace Hook.OWL
         [SerializeField] private TextMeshProUGUI OverwatchName;
         [SerializeField] private TextMeshProUGUI PlayerName;
         [SerializeField] private TextMeshProUGUI CareerStatsDescription;
+        [SerializeField] private TextMeshProUGUI GamesPlayedValue;
+        [SerializeField] private TextMeshProUGUI TimePlayedValue;
         [SerializeField] private GameObject StatGridElementPrefab;
         [SerializeField] private Transform StatGridContainer;
         [SerializeField] private GameObject HeroGridElementPrefab;
@@ -30,6 +32,7 @@ namespace Hook.OWL
         private OWLData _data;
         private List<HeroData> _heroes;
         private HeroData _heroTotals;
+        private HeroGridElementController _selectedHero;
         
         #endregion
         
@@ -41,6 +44,10 @@ namespace Hook.OWL
 
         void Update()
         {
+            var scrollArea = HeroGridContainer.transform.parent;
+            var start = scrollArea.position.y;
+            var end = start + scrollArea.GetComponent<RectTransform>().rect.height;
+            Debug.LogFormat("[ start: {0}, end: {1} ]", start, end);
         }
         
         #endregion
@@ -66,6 +73,13 @@ namespace Hook.OWL
             _heroTotals = heroesUsed[heroesUsed.Count - 1];
             heroesUsed.Remove(_heroTotals);
             _heroes = heroesUsed;
+            
+            // setting games played total
+            GamesPlayedValue.text = _heroTotals.UsageCount.ToString();
+            
+            // setting total time played
+            var totalTimePlayed = _data.GetTotalTimePlayed(player.OverwatchName);
+            TimePlayedValue.text = string.Format("{0:0.0} MINS", totalTimePlayed.TotalMinutes);
             
             // populate career stats view
             CareerStatsDescription.text = _heroTotals.Hero;
@@ -162,12 +176,23 @@ namespace Hook.OWL
         
         #region Event Handlers
 
-        private void OnHeroGridElementSelected(HeroData obj, bool isSelected)
+        private void OnHeroGridElementSelected(HeroGridElementController newHero, HeroData obj, bool isSelected)
         {
+            if (_selectedHero != null && _selectedHero != newHero)
+            {
+                _selectedHero.UpdateState(false);
+            }
+
+            // saving controller reference
+            _selectedHero = newHero;
+            
+            // getting hero data to update with
             var heroData = isSelected ? obj : _heroTotals;
             
-            CareerStatsDescription.text = heroData.Hero;
+            // setting hero name in description field
+            CareerStatsDescription.text = heroData.Hero.ToUpper();
             
+            // updating career stats section
             UpdateCareerStats(heroData);
         }
 

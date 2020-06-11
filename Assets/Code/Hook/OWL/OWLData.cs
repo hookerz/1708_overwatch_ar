@@ -134,6 +134,31 @@ namespace Hook.OWL
 
             return data;
         }
+
+        public TimeSpan GetTotalTimePlayed(string playerName)
+        {
+            string query = String.Format(@"
+                SELECT TimePlayed
+                FROM BattleStats B 
+                WHERE lower(B.Player)='{0}'"
+                , playerName.ToLower());
+            
+            var data = _db.RunQuery<List<MatchData>>(query);
+
+            // calculating percent used for each hero
+            TimeSpan totalTime = new TimeSpan();
+            data.ForEach((matchData) =>
+            {
+                var span = TimeSpan.ParseExact(matchData.TimePlayed, @"m\:ss", null);
+                Debug.LogFormat("Match time: [ minutes: {0}, seconds: {1} ]", span.Minutes, span.Seconds);
+                //Debug.Log("Time played: " + matchData.TimePlayed);
+                totalTime = totalTime.Add(span);
+            });
+            
+            Debug.LogFormat("Total time: [ days: {0}, hours: {1}, minutes: {2} ]", totalTime.TotalDays, totalTime.TotalHours, totalTime.TotalMinutes);
+            
+            return totalTime;
+        }
         
         #endregion
     }

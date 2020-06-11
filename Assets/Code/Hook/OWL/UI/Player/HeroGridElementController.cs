@@ -13,18 +13,22 @@ namespace Hook.OWL
     {
         #region Properties
 
-        [CanBeNull] public Action<HeroData, bool> OnHeroGridElementSelected;
+        [CanBeNull] public Action<HeroGridElementController, HeroData, bool> OnHeroGridElementSelected;
         
         [SerializeField] private TextMeshProUGUI HeroName;
         [SerializeField] private Image HeroImage;
         [SerializeField] private Image Progress;
         [SerializeField] private TextMeshProUGUI HeroMetricValue;
-
+        [SerializeField] private GameObject SelectedView;
+        
         private HeroData _heroData;
         private int _heroMetricValue;
         private RectTransform _transform;
         private bool _hasDisplayed;
         private bool _isSelected;
+        private Color _borderColor;
+        private Vector3 _startPosition;
+        private float _height;
         
         #endregion
         
@@ -33,6 +37,9 @@ namespace Hook.OWL
         private void Awake()
         {
             _transform = GetComponent<RectTransform>();
+            _borderColor = SelectedView.GetComponent<Image>().color;
+            _startPosition = _transform.position;
+            _height = _transform.rect.height;
         }
 
         void Start()
@@ -41,6 +48,10 @@ namespace Hook.OWL
 
         void Update()
         {
+            if (_heroData != null && string.Equals(_heroData.Hero, "Doomfist"))
+            {
+                Debug.LogFormat("[{0}] Position: {1}", _heroData.Hero, _transform.position);
+            }
         }
         
         #endregion
@@ -88,6 +99,19 @@ namespace Hook.OWL
                 yield return new WaitForSeconds(.1f);
             } while (true);
         }
+
+        public void UpdateState(bool newSelectedState)
+        {
+            _isSelected = newSelectedState;
+            
+            var border = SelectedView.GetComponent<Image>();
+            var end = _borderColor;
+            if (_isSelected)
+            {
+                end.a = 1;
+            }
+            border.DOColor(end, .4f);
+        }
         
         #endregion
         
@@ -95,9 +119,9 @@ namespace Hook.OWL
 
         public void OnHeroSelected()
         {
-            _isSelected = !_isSelected;
+            UpdateState(!_isSelected);
             
-            OnHeroGridElementSelected?.Invoke(_heroData, _isSelected);
+            OnHeroGridElementSelected?.Invoke(this, _heroData, _isSelected);
         }
         
         #endregion

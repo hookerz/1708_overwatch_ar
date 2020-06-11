@@ -3,6 +3,12 @@ using System;
 namespace Hook.OWL
 {
     [Serializable]
+    public class MatchData
+    {
+        public string TimePlayed;
+    }
+    
+    [Serializable]
     public class HeroData
     {
         #region Properties
