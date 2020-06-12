@@ -82,7 +82,7 @@ namespace Hook.OWL
             TimePlayedValue.text = string.Format("{0:0.0} MINS", totalTimePlayed.TotalMinutes);
             
             // populate career stats view
-            CareerStatsDescription.text = _heroTotals.Hero;
+            CareerStatsDescription.text = _heroTotals.Hero.ToUpper();
             PopulateCareerStats(_heroTotals);
             
             // populate heroes used view
